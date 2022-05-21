@@ -31,6 +31,8 @@ public class MainTestPortalProject {
 //Salman's Workspace Ending
 
 //Oumar's Workspace Starting
+    public static void TestGrades(){}
+
 //Oumar's Workspace Ending
 
 //Humayun's Workspace Starting
