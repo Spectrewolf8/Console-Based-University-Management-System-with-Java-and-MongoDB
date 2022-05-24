@@ -21,6 +21,8 @@ public class MainTestPortalProject {
         System.out.print("Choose any option : \ta : Check Students List\tb : Manage Students\n");
         String choice = scanner.next();
 
+
+
         if("Aa".contains(choice)){
             System.out.println(MajorPass.toString());
         }else if("Bb".contains(choice)){
