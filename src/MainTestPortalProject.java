@@ -176,8 +176,10 @@ public class MainTestPortalProject {
         ConnectDB(); // this function will connect our program to our Atlas Cluster
         DisableMongoLogs(); //this will disable Annoying mongoDB logs
         initialize();
-        Degree_manager();
+        System.out.println("ClearSC");
+
         StudentsManager();
+        Degree_manager();
 
     }
     ///**Modules**
@@ -679,157 +681,251 @@ public class MainTestPortalProject {
             }
         }
 
-        public static void QuizManagement() throws InterruptedException {
-            System.out.println("Enter a if you are a student and b if you are a teacher.");
-            Scanner input = new Scanner(System.in);
-            String choiceQ = input.next();
-            int totalStudentsInClass = 5;
-            String filename = "any";
-            String[] rollNumbers;
-            String[] names;
-            rollNumbers = new String[totalStudentsInClass];
-            names = new String[totalStudentsInClass];
-            int totalQuestions = 15; /* can add input.nextInt()*/
-            String[] answers;
-            int[] qMarks = new int[totalStudentsInClass];
-            double days1 = 0;
-            double hours1 = 0;
-            double minutes1 = 0;
-            double MainStartTimeQuiz = 1655050039699.0;
-            double Deadline = 0;
-            if (choiceQ.equalsIgnoreCase("b")) {
-                for (int k = 0; k < totalStudentsInClass; k++) {
-                    System.out.print("Enter the roll number of the student.");
-                    rollNumbers[k] = input.next();
-                    System.out.print("Enter the name of the student.");
-                    names[k] = input.next();
-                }
-                System.out.print("Enter \na: if you want to add a quiz and issue it to the students.\nb: if you want to check the quizes");
-                String choiceTeacherQ = input.next();
-                if (choiceTeacherQ.equalsIgnoreCase("a")) {
-                    answers = new String[totalQuestions];
-                    try {
-                        XWPFDocument Document5 = new XWPFDocument();
-                        FileOutputStream SampleQuiz = new FileOutputStream(new File("SampleQuiz2.docx"));
-                        Document5.write(SampleQuiz);
-                        SampleQuiz.close();
-                        System.out.println("A file has been created of name \'SampleQuiz' with .docx extension.");
-                        System.out.println("Please now make a quiz on this docx file.");
-                        System.out.print("If you have made the quiz, enter a to make answer key.");
-                        String inputing = input.next();
-                        if (inputing.equalsIgnoreCase("a")) {
-                            XWPFDocument Document6 = new XWPFDocument(OPCPackage.open("SampleQuiz2.docx"));
-                            for (int o = 0; o <= totalQuestions; o++) {
-                                System.out.println("Please enter the answer for question " + o);
-                                String sa = input.next();
-                                for (XWPFParagraph paragraph3: Document6.getParagraphs()) {
-                                    for (XWPFRun r: paragraph3.getRuns()) {
-                                        String text = r.getText(0);
-                                        String concat1 = "Answer".concat(Integer.toString(o + 1)).concat(":");
-                                        if (text != null && text.contains(concat1)) {
-                                            text = text.replace(concat1, concat1.concat(sa));
-                                            r.setText(text, 0);
-                                            answers[o] = concat1.concat(sa);
-                                        }
+    public static void QuizManagement() throws InterruptedException {
+        System.out.println("Enter a if you are a student and b if you are a teacher.");
+        Scanner input=new Scanner(System.in);
+        String choiceQ=input.next();
+        String filename="any";
+        ArrayList<String> names=new ArrayList<>();
+        ArrayList<String> rollNumbers=new ArrayList<>();
+        int totalQuestions=15; /* can add input.nextInt()*/
+        ArrayList<String> answers=new ArrayList<>();
+        ArrayList<Integer> qMarks=new ArrayList<>();
+        //Use this to transfer to GPA calculator
+        double days1=7*24*60*60000;
+        double hours1=0*60*60000;
+        double minutes1=0*60000;
+        double MainStartTimeQuiz=1655050039699.0;
+        double TimeGiven=days1+hours1+minutes1;
+        if (choiceQ.equalsIgnoreCase("b")) {
+            System.out.println("Enter the department and the class that you want to issue the quiz");
+            String departmentName=input.next();
+            String className=input.next();
+            //Using Mongo data, add students (and their roll numbers) of the respective dept and class to the names and rollNumbers array lists
+            System.out.print("Enter \na: if you want to add a quiz and issue it to the students.\nb: if you want to check the quizes");
+            String choiceTeacherQ = input.next();
+            if (choiceTeacherQ.equalsIgnoreCase("a")) {
+                try {
+                    XWPFDocument Document5 = new XWPFDocument();
+                    FileOutputStream SampleQuiz = new FileOutputStream(new File("SampleQuiz2.docx"));
+                    Document5.write(SampleQuiz);
+                    SampleQuiz.close();
+                    System.out.println("A file has been created of name \'SampleQuiz' with .docx extension.");
+                    System.out.println("Please now make a quiz on this docx file.");
+                    System.out.print("If you have made the quiz, enter a to make answer key.");
+                    String inputing = input.next();
+                    if (inputing.equalsIgnoreCase("a")) {
+                        XWPFDocument Document6 = new XWPFDocument(OPCPackage.open("SampleQuiz2.docx"));
+                        for (int o = 0; o <= totalQuestions; o++) {
+                            System.out.println("Please enter the answer for question " + o);
+                            String sa = input.next();
+                            for (XWPFParagraph paragraph3 : Document6.getParagraphs()) {
+                                for (XWPFRun r : paragraph3.getRuns()) {
+                                    String text = r.getText(0);
+                                    String concat1 = "Answer".concat(Integer.toString(o + 1)).concat(":");
+                                    if (text != null && text.contains(concat1)) {
+                                        text = text.replace(concat1, concat1.concat(sa));
+                                        r.setText(text, 0);
+                                        answers.add(concat1.concat(sa));
                                     }
                                 }
                             }
-                            Document6.write(new FileOutputStream("SampleQuizAnswerKey1.docx"));
-                            System.out.println("Another file has been created as answer key of name \'SampleQuizAnswerKey' with .docx extension.");
                         }
+                        Document6.write(new FileOutputStream("SampleQuizAnswerKey1.docx"));
+                        System.out.println("Another file has been created as answer key of name \'SampleQuizAnswerKey' with .docx extension.");
+                    }
+                } catch (IOException | InvalidFormatException e) {
+                    System.out.println("e");
+                }
+                for (int l = 0; l < names.size(); l++) {
+                    try {
+                        filename = names.get(l).concat(rollNumbers.get(l)).concat(".docx");
+                        XWPFDocument Document7 = new XWPFDocument(OPCPackage.open("SampleQuiz2.docx"));
+                        Document7.write(new FileOutputStream(filename));
+                        /*send this file to MongoDataBase to the respective student of this roll number*/
                     } catch (IOException | InvalidFormatException e) {
                         System.out.println("e");
                     }
-                    for (int l = 0; l < totalStudentsInClass; l++) {
-                        try {
-                            filename = names[l].concat(rollNumbers[l]).concat(".docx");
-                            XWPFDocument Document7 = new XWPFDocument(OPCPackage.open("SampleQuiz2.docx"));
-                            Document7.write(new FileOutputStream(filename));
-                            /*send this file to MongoDataBase to the respective student of this roll number*/
-                        } catch (IOException | InvalidFormatException e) {
-                            System.out.println("e");
-                        }
-                    }
-                    System.out.println("Quizes have been uploaded.");
-                    System.out.println("Enter the time for submission in days,hours,minutes.");
-                    MainStartTimeQuiz = System.currentTimeMillis();
-                    double days = input.nextInt();
-                    days1 = days * 24 * 60 * 60000;
-                    double hours = input.nextInt();
-                    hours1 = hours * 60 * 60000;
-                    double minutes = input.nextInt();
-                    minutes1 = minutes * 60000;
-                    Deadline = days1 + hours1 + minutes1;
-                    if (System.currentTimeMillis() - MainStartTimeQuiz == Deadline) {
-                        try {
-                            for (int m = 0; m < totalStudentsInClass; m++) {
-                                int sMarks = 0;
-                                XWPFDocument docx = new XWPFDocument(new FileInputStream(rollNumbers[m].concat(names[m]).concat("1.docx")));
-                                XWPFWordExtractor wordFile = new XWPFWordExtractor(docx);
-                                String ultimate = wordFile.getText();
-                                for (int n = 0; n < totalQuestions; n++) {
-                                    if (ultimate.contains(answers[n])) {
-                                        sMarks = sMarks + 1;
-                                    }
+                }
+                System.out.println("Quizes have been uploaded.");
+                System.out.println("Edit the code for time for submission in days,hours,minutes.");
+            }
+            else if (choiceTeacherQ.equalsIgnoreCase("b")) {
+                if (System.currentTimeMillis()-MainStartTimeQuiz>=TimeGiven)
+                {
+                    try {
+                        for (int m = 0; m < names.size(); m++) {
+                            int sMarks = 0;
+                            XWPFDocument docx = new XWPFDocument(new FileInputStream(rollNumbers.get(m).concat(names.get(m)).concat("1.docx")));
+                            XWPFWordExtractor wordFile = new XWPFWordExtractor(docx);
+                            String ultimate = wordFile.getText();
+                            for (int n = 0; n < totalQuestions; n++) {
+                                if (ultimate.contains(answers.get(n))) {
+                                    sMarks = sMarks + 1;
                                 }
-                                qMarks[m] = sMarks;
-                                System.out.println(sMarks);
                             }
-                        } catch (IOException e) {
-                            System.out.println("e");
+                            qMarks.add(sMarks);
+                            System.out.println(sMarks);
                         }
+                    } catch (IOException e) {
+                        System.out.println("e");
                     }
                 }
+                else
+                    System.out.println("Time given has not finished yet");
             }
-            if (choiceQ.equalsIgnoreCase("a")) {
-                System.out.print("Enter your roll number please");
-                String rNumber = input.next();
-                System.out.print("Enter your name please");
-                String studentName = input.next();
-                if (System.currentTimeMillis() - MainStartTimeQuiz < Deadline) {
-                    try {
-                        XWPFDocument Document9 = new XWPFDocument(OPCPackage.open(studentName.concat(rNumber).concat(".docx")));
-                        double starttime = System.currentTimeMillis();
-                        if (System.currentTimeMillis() - starttime < 900000) {
-                            for (int o = 1; o <= totalQuestions; o++) {
-                                if (System.currentTimeMillis() - starttime < 900000) {
-                                    System.out.println("Please enter the answer for question " + o);
-                                    if (System.currentTimeMillis() - starttime < 900000) {
-                                        String studentAnswer = input.next();
-                                        if (System.currentTimeMillis() - starttime < 900000) {
-                                            for (XWPFParagraph paragraph3: Document9.getParagraphs()) {
-                                                for (XWPFRun r: paragraph3.getRuns()) {
-                                                    String text = r.getText(0);
-                                                    String concat1 = "Answer".concat(Integer.toString(o)).concat(":");
-                                                    if (text != null && text.contains(concat1)) {
-                                                        text = text.replace(concat1, concat1.concat(studentAnswer));
-                                                        r.setText(text, 0);
-                                                    }
+        }
+        if (choiceQ.equalsIgnoreCase("a"))
+        {
+            System.out.print("Enter your roll number please");
+            String rNumber=input.next();
+            System.out.print("Enter your name please");
+            String studentName=input.next();
+            if (System.currentTimeMillis()-MainStartTimeQuiz<TimeGiven)
+            {
+                try {
+                    XWPFDocument Document9 = new XWPFDocument(OPCPackage.open(studentName.concat(rNumber).concat(".docx")));
+                    double starttime = System.currentTimeMillis();
+                    if (System.currentTimeMillis()-starttime<900000)
+                    {
+                        for (int o = 1; o <= totalQuestions; o++) {
+                            if (System.currentTimeMillis()-starttime<900000)
+                            {
+                                System.out.println("Please enter the answer for question " + o);
+                                if (System.currentTimeMillis()-starttime<900000)
+                                {
+                                    String studentAnswer = input.next();
+                                    if (System.currentTimeMillis()-starttime<900000)
+                                    {
+                                        for (XWPFParagraph paragraph3 : Document9.getParagraphs()) {
+                                            for (XWPFRun r : paragraph3.getRuns()) {
+                                                String text = r.getText(0);
+                                                String concat1 = "Answer".concat(Integer.toString(o)).concat(":");
+                                                if (text != null && text.contains(concat1)) {
+                                                    text = text.replace(concat1, concat1.concat(studentAnswer));
+                                                    r.setText(text, 0);
                                                 }
                                             }
-                                        } else {
-                                            System.out.println("Time is over");
-                                            break;
                                         }
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         System.out.println("Time is over");
                                         break;
                                     }
-                                } else {
+                                }
+                                else
+                                {
                                     System.out.println("Time is over");
                                     break;
                                 }
                             }
-                            Document9.write(new FileOutputStream(rNumber.concat(studentName).concat("1.docx")));
+                            else
+                            {
+                                System.out.println("Time is over");
+                                break;
+                            }
                         }
-                    } catch (IOException | InvalidFormatException e) {
-                        System.out.print("e");
+                        Document9.write(new FileOutputStream(rNumber.concat(studentName).concat("1.docx")));
                     }
-                } else {
-                    System.out.println("Sorry! You are late than the given deadline");
+                }catch (IOException | InvalidFormatException e)
+                {
+                    System.out.print("e");
+                }
+            }
+            else
+            {
+                System.out.println("Sorry! You are late than the given time");
+            }
+        }
+    }
+    public static void AssignmentModule()
+    {
+        System.out.println("Enter a if you are a student and b if you are a teacher.");
+        Scanner input = new Scanner(System.in);
+        String choiceA = input.next();
+        String filenameA = "any";
+        ArrayList<String> namesA = new ArrayList<>();
+        ArrayList<String> rollNumbersA = new ArrayList<>();
+        ArrayList<Double> aMarks = new ArrayList<>();
+        double days2 = 7 * 24 * 60 * 60000;
+        double hours2 = 0 * 60 * 60000;
+        double minutes2 = 0 * 60000;
+        double MainStartTimeAssignment = 1655050039699.0;
+        double Deadline = days2 + hours2 + minutes2;
+        if (choiceA.equalsIgnoreCase("b")) {
+            System.out.println("Enter the department and the class that you want to issue the assignment");
+            String departmentNameA = input.next();
+            String classNameA = input.next();
+            //Using Mongo data, add students (and their roll numbers) of the respective dept and class to the names and rollNumbers array lists
+            System.out.print("Enter \na: if you want to add an assignment and issue it to the students.\nb: if you want to upload marks for assignments");
+            String choiceTeacherA = input.next();
+            if (choiceTeacherA.equalsIgnoreCase("a")) {
+                try {
+                    XWPFDocument Document = new XWPFDocument();
+                    FileOutputStream Assignment = new FileOutputStream(new File("BASEASSIGNMENT.docx"));
+                    Document.write(Assignment);
+                    Assignment.close();
+                    System.out.println("A file has been created of name \'BASEASSIGNMENT' with .docx extension.");
+                    System.out.println("Please now make an assignment on this docx file.");
+                } catch (Exception e) {
+                    System.out.println("e");
+                }
+                for (int d = 0; d < namesA.size(); d++) {
+                    try {
+                        filenameA = namesA.get(d).concat(rollNumbersA.get(d)).concat(".docx");
+                        XWPFDocument Document1 = new XWPFDocument(OPCPackage.open("BASEASSIGNMENT.docx"));
+                        Document1.write(new FileOutputStream(filenameA));
+                        /*send this file to MongoDataBase to the respective student of this roll number*/
+                    } catch (InvalidFormatException | IOException e) {
+                        System.out.println("e");
+                    }
+                }
+                System.out.println("Assignments have been uploaded.");
+                System.out.println("Edit the code by editing the mainStartTimeAssignment, days, hours and minutes for deadline.");
+            } else if (choiceTeacherA.equalsIgnoreCase("b")) {
+                if (System.currentTimeMillis() - MainStartTimeAssignment >= Deadline) {
+                    for (int d = 0; d < namesA.size(); d++) {
+                        System.out.println("upload the marks of " + namesA.get(d));
+                        double marksNameA = input.nextDouble();
+                        aMarks.add(marksNameA);
+                    }
                 }
             }
         }
+        else if (choiceA.equalsIgnoreCase("a")) {
+            System.out.print("Enter your roll number please");
+            String rNumberA = input.next();
+            System.out.print("Enter your name please");
+            String studentNameA = input.next();
+            if (System.currentTimeMillis() - MainStartTimeAssignment < Deadline-(10*60000)) {
+                try {
+                    XWPFDocument Document2 = new XWPFDocument(OPCPackage.open(studentNameA.concat(rNumberA).concat(".docx")));
+                    for (XWPFParagraph paragraph2 : Document2.getParagraphs()) {
+                        for (XWPFRun r : paragraph2.getRuns()) {
+                            String text = r.getText(0);
+                            if (text != null && text.contains("Roll Number:")) {
+                                text = text.replace("Roll Number:", "BSE-058");
+                                r.setText(text, 0);
+                            }
+                            if (text != null && text.contains("Name:")) {
+                                text = text.replace("Name:", "Muhammad Oumar");
+                                r.setText(text, 0);
+                            }
+                        }
+                    }
+                    Document2.write(new FileOutputStream(rNumberA.concat(studentNameA).concat("1.docx")));
+                }
+                catch (InvalidFormatException | IOException e) {
+                    System.out.println("e");
+                }
+            }
+            else
+            {
+                System.out.println("Sorry! You are late than the given time");
+            }
+        }
+    }
         //Oumar's Workspace Endin
 
         //Humayun's Workspace Starting
