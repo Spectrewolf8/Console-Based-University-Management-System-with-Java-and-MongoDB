@@ -33,7 +33,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
-
 // for mongodb
 import com.mongodb.client.*;
 import com.mongodb.MongoCredential;
@@ -163,7 +162,6 @@ public class MainTestPortalProject {
     //Degrees Public Hashmap
     //public static Map < String, String > DegreePrograms = new HashMap < String, String > ();
 
-
     //Pretty for formatting of Document being printed
     private static String pretty(Document document) {
         var settings = JsonWriterSettings.builder()
@@ -184,16 +182,16 @@ public class MainTestPortalProject {
     }
     ///**Modules**
     //public Fee collection access
-    public static MongoCollection<Document> FeeCollection = MainDatabase.getCollection("FeesManagement");
-    public static FindIterable<Document> FeeList = FeeCollection.find();
+    public static MongoCollection < Document > FeeCollection = MainDatabase.getCollection("FeesManagement");
+    public static FindIterable < Document > FeeList = FeeCollection.find();
     //public Attendance collection access
-    public static MongoCollection<Document> AttendanceCollection = MainDatabase.getCollection("AttendanceManagement");//opens Attendance management collection to work on
-    public static FindIterable<Document> AttendanceList = AttendanceCollection.find();
+    public static MongoCollection < Document > AttendanceCollection = MainDatabase.getCollection("AttendanceManagement"); //opens Attendance management collection to work on
+    public static FindIterable < Document > AttendanceList = AttendanceCollection.find();
     //public degree collection access
     public static MongoCollection < Document > DegreesCollection = MainDatabase.getCollection("DegreesList");
     public static FindIterable < Document > DegreesList = DegreesCollection.find();
 
-    public static void AttendanceStudentLinker(String subjectName){
+    public static void AttendanceStudentLinker(String subjectName) {
         Document NewSubjectToAddInAttendance = new Document("_id", subjectName);
         AttendanceCollection.insertOne(NewSubjectToAddInAttendance);
     }
@@ -223,10 +221,37 @@ public class MainTestPortalProject {
             System.out.print("Enter Course name without spaces in (AA-AA)format : ");
             String courseName = scanner.next();
 
-            String[] Alphabets = new String[]{"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
-            List<String> SectionsGen = new ArrayList<>();
+            String[] Alphabets = new String[] {
+                    "A",
+                    "B",
+                    "C",
+                    "D",
+                    "E",
+                    "F",
+                    "G",
+                    "H",
+                    "I",
+                    "J",
+                    "K",
+                    "L",
+                    "M",
+                    "N",
+                    "O",
+                    "P",
+                    "Q",
+                    "R",
+                    "S",
+                    "T",
+                    "U",
+                    "V",
+                    "W",
+                    "X",
+                    "Y",
+                    "Z"
+            };
+            List < String > SectionsGen = new ArrayList < > ();
             //String[] SubjectsList = new String[]{"",""};
-            List<String> Subjects = new ArrayList<>();
+            List < String > Subjects = new ArrayList < > ();
 
             if ((courseID.length() == 2) && (courseName.length() == 5 && courseName.charAt(2) == '-')) {
                 int NumOfCourses = 0;
@@ -257,7 +282,7 @@ public class MainTestPortalProject {
                         .append("Sections", SectionsGen)
                         .append("SubjectsInThisCourse", Subjects);
 
-                DegreesCollection.insertOne(newDegree);//inserting the created Degree
+                DegreesCollection.insertOne(newDegree); //inserting the created Degree
                 System.out.print("Course with " + courseID + " and name " + courseName + " added");
 
             } else {
@@ -299,7 +324,7 @@ public class MainTestPortalProject {
         if ("bB".indexOf(choice) == 0 || "bB".indexOf(choice) == 1) { //checked for B like this because of the bug
             StudentsManager_Manage();
         } else if ("Aa".contains(choice)) {
-            StudentManger_ViewStudentLis();
+            StudentManger_ViewStudentList();
             System.out.println("Choose your next action :\n\ta : Return to Students Manager\n\tb : Return to main menu");
             choice = scanner.next();
             if ("aA".contains(choice)) {
@@ -312,10 +337,9 @@ public class MainTestPortalProject {
 
         }
 
-
     }
     //student manager submodules
-    public static void StudentManger_ViewStudentLis() {
+    public static void StudentManger_ViewStudentList() {
         System.out.println("Choose an option?\t\na : view all students \n\tb : Custom search with Filters\n\t press Any other key to cancel");
         choice = scanner.next();
         if ("aA".contains(choice)) {
@@ -368,7 +392,7 @@ public class MainTestPortalProject {
             StudentsManager_Manage_Update();
 
         } else if ("cC".contains(choice)) {
-         StudentsManager_Manage_Delete();
+            StudentsManager_Manage_Delete();
 
         } else if ("xX".contains(choice)) {
             System.out.println("Cancelling");
@@ -409,12 +433,12 @@ public class MainTestPortalProject {
             JSONArray SelectedDegreeSectionsObject = (JSONArray) SelectedDegreeObjForSectionsListJson.get("Sections");
 
             //for(int j = 0;j<SelectedDegreeSectionsObject.length();j++){
-             //   System.out.println(List.of(SelectedDegreeSectionsObject).get(j));
+            //   System.out.println(List.of(SelectedDegreeSectionsObject).get(j));
             //}
             System.out.println("--Sections--");
-            ArrayList<Object> SectionsSelectionBuffer = new ArrayList<>();
+            ArrayList < Object > SectionsSelectionBuffer = new ArrayList < > ();
             int x = 1;
-            for (Object i : SelectedDegreeSectionsObject){
+            for (Object i: SelectedDegreeSectionsObject) {
                 System.out.println(x + " : " + i);
                 x++;
                 SectionsSelectionBuffer.add(i);
@@ -423,17 +447,17 @@ public class MainTestPortalProject {
             boolean BadInput = true;
             int SecSerial;
             String SelectedSection = null;
-            while(BadInput){
-                try{
-                    SecSerial= IntScanner.nextInt();
-                    SelectedSection = (String) SectionsSelectionBuffer.get(SecSerial-1);
+            while (BadInput) {
+                try {
+                    SecSerial = IntScanner.nextInt();
+                    SelectedSection = (String) SectionsSelectionBuffer.get(SecSerial - 1);
                     BadInput = false;
-                }catch (InputMismatchException | IndexOutOfBoundsException e){
-                    System.err.println("Invalid Input!! Please provide valid index : " );
+                } catch (InputMismatchException | IndexOutOfBoundsException e) {
+                    System.err.println("Invalid Input!! Please provide valid index : ");
                 }
             }
 
-           // System.out.println(SelectedDegreeSectionsObject);
+            // System.out.println(SelectedDegreeSectionsObject);
 
             Document NewStudentData = new Document("_id", RegNum)
                     .append("StudentName", StudentName)
@@ -443,7 +467,7 @@ public class MainTestPortalProject {
 
             Document StudentDataForAttendance = new Document("_id", RegNum)
                     .append("Student Name", StudentName)
-                    .append("Class",SelectedSection)
+                    .append("Class", SelectedSection)
                     .append("Total Presents", 0)
                     .append("Total Absents", 0);
 
@@ -459,9 +483,9 @@ public class MainTestPortalProject {
             System.out.println("Student Created : " + StudentName + " - " + RegNum);
             System.out.println("Add more students?\n\ta : yes\n\tAny other key to exit");
             choice = scanner.next();
-            if ("aA".contains(choice)){
+            if ("aA".contains(choice)) {
                 StudentsManager_Manage_Add();
-            }else{
+            } else {
                 System.out.println("Exiting...");
             }
         } else {
@@ -497,7 +521,6 @@ public class MainTestPortalProject {
 
     public static void StudentsManager_Manage_Update() {
 
-
         System.out.println("Choose any option :\n\t a : View all students and update\n\t b : Custom filter and update\n\t x : cancel");
 
         if ("aA".contains(choice)) {
@@ -508,7 +531,7 @@ public class MainTestPortalProject {
             choice = scanner.next();
             StudentsManager_UpdateStudent();
         } else if ("bB".contains(choice)) {
-            StudentManger_ViewStudentLis();
+            StudentManger_ViewStudentList();
             // var UpdatesQueue = new ArrayList < Document > ();
             StudentsManager_UpdateStudent();
             System.out.println("Choose the scheme of updates :\n\t a : update/add single value\n\t b : update multiple values");
@@ -548,426 +571,329 @@ public class MainTestPortalProject {
         MongoCollection < Document > SelectedCollection = MainDatabase.getCollection("DegreesList");
         Bson projection = Projections.fields(Projections.include("Sections"), Projections.excludeId());
         FindIterable < Document > SelectedDocument = SelectedCollection.find(Filters.eq("_id", SelectDepartment)).projection(projection);
-
-
-//Oumar's Workspace Starting
-public class creation
-{
-    public static void main(String[] args) throws InvalidFormatException, IOException {
-
         for (Document i: SelectedDocument) {
             return i;
         }
         return null;
     }
-    // String SelectedDegree = null;
-    //if (selectedDegDoc.contains("-" + SelectDepartment)) {
-    //    int initIndex = selectedDegDoc.indexOf("-") - 2;
-    //    SelectedDegree = selectedDegDoc.substring(initIndex, initIndex + 5);
-    //}
+        // Salman's Workspace Ending
 
+        //Oumar's Workspace Starting
+        public static void feeManagement() throws InvalidFormatException, IOException {
+            Scanner input = new Scanner(System.in);
+            System.out.println("Enter a if you are a student, b if you are from admin.");
+            String choiceF = input.next();
+            String[] chalanFileNames;
+            if (choiceF.equalsIgnoreCase("b")) {
+                System.out.print("Enter \na: if you want to create a sample chalan..\nb: if you want to issue chalan forms to the students.");
+                String choiceAdminF = input.next();
+                if (choiceAdminF.equalsIgnoreCase("a")) {
+                    try {
+                        XWPFDocument Document = new XWPFDocument();
+                        FileOutputStream out = new FileOutputStream(new File("SAMPLECHALAN.docx"));
+                        XWPFTable table = Document.createTable(2, 4);
+                        Document.write(out);
+                        out.close();
+                        System.out.print("The file has been created");
+                    } catch (Exception e) {
+                        System.out.println("e");
+                    }
+                } else if (choiceAdminF.equalsIgnoreCase("b")) {
+                    StudentManger_ViewStudentList();
+                    System.out.print("Enter the degree program of students to whom you want to issue chalan forms");
+                    String studentDegreeProgram = input.next();
 
-    // Salman's Workspace Ending
+                   // Map<String,String> studentsOfDegreeProgram = new HashMap<>();
 
-    //Oumar's Workspace Starting
-    public static void feeManagement() throws InvalidFormatException, IOException {
-        Scanner input = new Scanner(System.in);
-        System.out.println("Enter a if you are a student, b if you are from admin.");
-        String choiceF = input.next();
-        String[] chalanFileNames;
-        if (choiceF.equalsIgnoreCase("b")) {
-            System.out.print("Enter \na: if you want to create a sample chalan..\nb: if you want to issue chalan forms to the students.");
-            String choiceAdminF = input.next();
-            if (choiceAdminF.equalsIgnoreCase("a")) {
-                try {
-                    XWPFDocument Document = new XWPFDocument();
-                    FileOutputStream out = new FileOutputStream(new File("SAMPLECHALAN.docx"));
-                    XWPFTable table = Document.createTable(2, 4);
-                    Document.write(out);
-                    out.close();
-                    System.out.print("The file has been created");
-                } catch (Exception e) {
-                    System.out.println("e");
-                }
-            }
-            else if (choiceAdminF.equalsIgnoreCase("b"))
-            {
-                System.out.print("Enter the degree program of students to whom you want to issue chalan forms");
-                String studentDegreeProgram = input.next();
-                String[][] studentsOfDegreeProgram = {{"BSE-058", "Muhammad Oumar"}, {"BSE-077", "Salman Tariq"}, {"BSE-082", "Muhammad Humayun"}}; /*The 2 statements can be replaced by mongoData for students in the departments*/
-                int rows = 3;
-                chalanFileNames = new String[rows];
-                try {
-                    System.out.println("Enter due date");
-                    String dueDate = input.next();
-                    System.out.println("Enter due fees");
-                    String dueFees = input.next();
-                    for (int b = 0; b < rows; b++) {
-                        XWPFDocument Document1 = new XWPFDocument(OPCPackage.open("SAMPLECHALAN.docx"));
-                        for (XWPFTable table : Document1.getTables()) {
-                            for (XWPFTableRow row : table.getRows()) {
-                                for (XWPFTableCell cell : row.getTableCells()) {
-                                    for (XWPFParagraph p : cell.getParagraphs()) {
-                                        for (XWPFRun r : p.getRuns()) {
-                                            String text = r.getText(0);
-                                            if (text != null && text.contains("STUDENT NAME:")) {
-                                                text = text.replace("STUDENT NAME:", studentsOfDegreeProgram[b][1]);
-                                                r.setText(text, 0);
+                   String[][] studentsOfDegreeProgram = {
+                           {
+                                   "BSE-058",
+                                   "Muhammad Oumar"
+                           },
+                           {
+                                   "BSE-077",
+                                   "Salman Tariq"
+                           },
+                           {
+                                   "BSE-082",
+                                   "Muhammad Humayun"
+                           }
+                    }; /*The 2 statements can be replaced by mongoData for students in the departments*/
+                    int rows = 3;
+                    chalanFileNames = new String[rows];
+                    try {
+                        System.out.println("Enter due date");
+                        String dueDate = input.next();
+                        System.out.println("Enter due fees");
+                        String dueFees = input.next();
+                        for (int b = 0; b < rows; b++) {
+                            XWPFDocument Document1 = new XWPFDocument(OPCPackage.open("SAMPLECHALAN.docx"));
+                            for (XWPFTable table: Document1.getTables()) {
+                                for (XWPFTableRow row: table.getRows()) {
+                                    for (XWPFTableCell cell: row.getTableCells()) {
+                                        for (XWPFParagraph p: cell.getParagraphs()) {
+                                            for (XWPFRun r: p.getRuns()) {
+                                                String text = r.getText(0);
+                                                if (text != null && text.contains("STUDENT NAME:")) {
+                                                    text = text.replace("STUDENT NAME:", studentsOfDegreeProgram[b][1]);
+                                                    r.setText(text, 0);
+                                                }
+                                                if (text != null && text.contains("ROLL NUMBER:")) {
+                                                    text = text.replace("ROLL NUMBER:", studentsOfDegreeProgram[b][0]);
+                                                    r.setText(text, 0);
+                                                }
+                                                if (text != null && text.contains("PROGRAM:")) {
+                                                    text = text.replace("PROGRAM:", studentDegreeProgram);
+                                                    r.setText(text, 0);
+                                                }
+                                                if (text != null && text.contains("TOTAL FEE:")) {
+                                                    text = text.replace("TOTAL FEE:", dueFees);
+                                                    r.setText(text, 0);
+                                                }
+                                                if (text != null && text.contains("DUE DATE:")) {
+                                                    text = text.replace("DUE DATE:", dueDate);
+                                                    r.setText(text, 0);
+                                                }
+                                                /*An if for father names to be added using Mongo*/
                                             }
-                                            if (text != null && text.contains("ROLL NUMBER:")) {
-                                                text = text.replace("ROLL NUMBER:", studentsOfDegreeProgram[b][0]);
-                                                r.setText(text, 0);
-                                            }
-                                            if (text != null && text.contains("PROGRAM:")) {
-                                                text = text.replace("PROGRAM:", studentDegreeProgram);
-                                                r.setText(text, 0);
-                                            }
-                                            if (text != null && text.contains("TOTAL FEE:")) {
-                                                text = text.replace("TOTAL FEE:", dueFees);
-                                                r.setText(text, 0);
-                                            }
-                                            if (text != null && text.contains("DUE DATE:")) {
-                                                text = text.replace("DUE DATE:", dueDate);
-                                                r.setText(text, 0);
-                                            }
-                                            /*An if for father names to be added using Mongo*/
                                         }
                                     }
                                 }
                             }
-                        }
-                        for (int c = 0; c < 2; c++) {
-                            if (c == 1) {
-                                Document1.write(new FileOutputStream(studentsOfDegreeProgram[b][0].concat(studentsOfDegreeProgram[b][1]).concat("banker").concat(".docx")));
-                                /*The file is uploaded on the banker's module*/
-                            } else {
-                                Document1.write(new FileOutputStream(studentsOfDegreeProgram[b][0].concat(studentsOfDegreeProgram[b][1]).concat(".docx")));
-                                /*The file is uploaded on the student's module*/
-                            }
-                        }
-                        chalanFileNames[b] = studentsOfDegreeProgram[b][0].concat(studentsOfDegreeProgram[b][1]).concat(".docx");
-                    }
-                    System.out.println("Chalan forms have been created for the students");
-                } catch (IOException e) {
-                    System.out.println("e");
-                }
-            }
-        }
-    }
-
-    public static void QuizManagement(String[] args) throws InterruptedException {
-        System.out.println("Enter a if you are a student and b if you are a teacher.");
-        Scanner input=new Scanner(System.in);
-        String choiceQ=input.next();
-        String filename="any";
-        ArrayList<String> names=new ArrayList<>();
-        ArrayList<String> rollNumbers=new ArrayList<>();
-        int totalQuestions=15; /* can add input.nextInt()*/
-        ArrayList<String> answers=new ArrayList<>();
-        ArrayList<Integer> qMarks=new ArrayList<>();
-        //Use this to transfer to GPA calculator
-        double days1=7*24*60*60000;
-        double hours1=0*60*60000;
-        double minutes1=0*60000;
-        double MainStartTimeQuiz=1655050039699.0;
-        double TimeGiven=days1+hours1+minutes1;
-        if (choiceQ.equalsIgnoreCase("b")) {
-            System.out.println("Enter the department and the class that you want to issue the quiz");
-            String departmentName=input.next();
-            String className=input.next();
-            //Using Mongo data, add students (and their roll numbers) of the respective dept and class to the names and rollNumbers array lists
-            System.out.print("Enter \na: if you want to add a quiz and issue it to the students.\nb: if you want to check the quizes");
-            String choiceTeacherQ = input.next();
-            if (choiceTeacherQ.equalsIgnoreCase("a")) {
-                try {
-                    XWPFDocument Document5 = new XWPFDocument();
-                    FileOutputStream SampleQuiz = new FileOutputStream(new File("SampleQuiz2.docx"));
-                    Document5.write(SampleQuiz);
-                    SampleQuiz.close();
-                    System.out.println("A file has been created of name \'SampleQuiz' with .docx extension.");
-                    System.out.println("Please now make a quiz on this docx file.");
-                    System.out.print("If you have made the quiz, enter a to make answer key.");
-                    String inputing = input.next();
-                    if (inputing.equalsIgnoreCase("a")) {
-                        XWPFDocument Document6 = new XWPFDocument(OPCPackage.open("SampleQuiz2.docx"));
-                        for (int o = 0; o <= totalQuestions; o++) {
-                            System.out.println("Please enter the answer for question " + o);
-                            String sa = input.next();
-                            for (XWPFParagraph paragraph3 : Document6.getParagraphs()) {
-                                for (XWPFRun r : paragraph3.getRuns()) {
-                                    String text = r.getText(0);
-                                    String concat1 = "Answer".concat(Integer.toString(o + 1)).concat(":");
-                                    if (text != null && text.contains(concat1)) {
-                                        text = text.replace(concat1, concat1.concat(sa));
-                                        r.setText(text, 0);
-                                        answers.add(concat1.concat(sa));
-                                    }
+                            for (int c = 0; c < 2; c++) {
+                                if (c == 1) {
+                                    Document1.write(new FileOutputStream(studentsOfDegreeProgram[b][0].concat(studentsOfDegreeProgram[b][1]).concat("banker").concat(".docx")));
+                                    /*The file is uploaded on the banker's module*/
+                                } else {
+                                    Document1.write(new FileOutputStream(studentsOfDegreeProgram[b][0].concat(studentsOfDegreeProgram[b][1]).concat(".docx")));
+                                    /*The file is uploaded on the student's module*/
                                 }
                             }
+                            chalanFileNames[b] = studentsOfDegreeProgram[b][0].concat(studentsOfDegreeProgram[b][1]).concat(".docx");
                         }
-                        Document6.write(new FileOutputStream("SampleQuizAnswerKey1.docx"));
-                        System.out.println("Another file has been created as answer key of name \'SampleQuizAnswerKey' with .docx extension.");
-                    }
-                } catch (IOException | InvalidFormatException e) {
-                    System.out.println("e");
-                }
-                for (int l = 0; l < names.size(); l++) {
-                    try {
-                        filename = names.get(l).concat(rollNumbers.get(l)).concat(".docx");
-                        XWPFDocument Document7 = new XWPFDocument(OPCPackage.open("SampleQuiz2.docx"));
-                        Document7.write(new FileOutputStream(filename));
-                        /*send this file to MongoDataBase to the respective student of this roll number*/
-                    } catch (IOException | InvalidFormatException e) {
-                        System.out.println("e");
-                    }
-                }
-                System.out.println("Quizes have been uploaded.");
-                System.out.println("Edit the code for time for submission in days,hours,minutes.");
-            }
-            else if (choiceTeacherQ.equalsIgnoreCase("b")) {
-                if (System.currentTimeMillis()-MainStartTimeQuiz>=TimeGiven)
-                {
-                    try {
-                        for (int m = 0; m < names.size(); m++) {
-                            int sMarks = 0;
-                            XWPFDocument docx = new XWPFDocument(new FileInputStream(rollNumbers.get(m).concat(names.get(m)).concat("1.docx")));
-                            XWPFWordExtractor wordFile = new XWPFWordExtractor(docx);
-                            String ultimate = wordFile.getText();
-                            for (int n = 0; n < totalQuestions; n++) {
-                                if (ultimate.contains(answers.get(n))) {
-                                    sMarks = sMarks + 1;
-                                }
-                            }
-                            qMarks.add(sMarks);
-                            System.out.println(sMarks);
-                        }
+                        System.out.println("Chalan forms have been created for the students");
                     } catch (IOException e) {
                         System.out.println("e");
                     }
                 }
-                else
-                    System.out.println("Time given has not finished yet");
             }
         }
-        if (choiceQ.equalsIgnoreCase("a"))
-        {
-            System.out.print("Enter your roll number please");
-            String rNumber=input.next();
-            System.out.print("Enter your name please");
-            String studentName=input.next();
-            if (System.currentTimeMillis()-MainStartTimeQuiz<TimeGiven)
-            {
-                try {
-                    XWPFDocument Document9 = new XWPFDocument(OPCPackage.open(studentName.concat(rNumber).concat(".docx")));
-                    double starttime = System.currentTimeMillis();
-                    if (System.currentTimeMillis()-starttime<900000)
-                    {
-                        for (int o = 1; o <= totalQuestions; o++) {
-                            if (System.currentTimeMillis()-starttime<900000)
-                            {
+
+        public static void QuizManagement() throws InterruptedException {
+            System.out.println("Enter a if you are a student and b if you are a teacher.");
+            Scanner input = new Scanner(System.in);
+            String choiceQ = input.next();
+            int totalStudentsInClass = 5;
+            String filename = "any";
+            String[] rollNumbers;
+            String[] names;
+            rollNumbers = new String[totalStudentsInClass];
+            names = new String[totalStudentsInClass];
+            int totalQuestions = 15; /* can add input.nextInt()*/
+            String[] answers;
+            int[] qMarks = new int[totalStudentsInClass];
+            double days1 = 0;
+            double hours1 = 0;
+            double minutes1 = 0;
+            double MainStartTimeQuiz = 1655050039699.0;
+            double Deadline = 0;
+            if (choiceQ.equalsIgnoreCase("b")) {
+                for (int k = 0; k < totalStudentsInClass; k++) {
+                    System.out.print("Enter the roll number of the student.");
+                    rollNumbers[k] = input.next();
+                    System.out.print("Enter the name of the student.");
+                    names[k] = input.next();
+                }
+                System.out.print("Enter \na: if you want to add a quiz and issue it to the students.\nb: if you want to check the quizes");
+                String choiceTeacherQ = input.next();
+                if (choiceTeacherQ.equalsIgnoreCase("a")) {
+                    answers = new String[totalQuestions];
+                    try {
+                        XWPFDocument Document5 = new XWPFDocument();
+                        FileOutputStream SampleQuiz = new FileOutputStream(new File("SampleQuiz2.docx"));
+                        Document5.write(SampleQuiz);
+                        SampleQuiz.close();
+                        System.out.println("A file has been created of name \'SampleQuiz' with .docx extension.");
+                        System.out.println("Please now make a quiz on this docx file.");
+                        System.out.print("If you have made the quiz, enter a to make answer key.");
+                        String inputing = input.next();
+                        if (inputing.equalsIgnoreCase("a")) {
+                            XWPFDocument Document6 = new XWPFDocument(OPCPackage.open("SampleQuiz2.docx"));
+                            for (int o = 0; o <= totalQuestions; o++) {
                                 System.out.println("Please enter the answer for question " + o);
-                                if (System.currentTimeMillis()-starttime<900000)
-                                {
-                                    String studentAnswer = input.next();
-                                    if (System.currentTimeMillis()-starttime<900000)
-                                    {
-                                        for (XWPFParagraph paragraph3 : Document9.getParagraphs()) {
-                                            for (XWPFRun r : paragraph3.getRuns()) {
-                                                String text = r.getText(0);
-                                                String concat1 = "Answer".concat(Integer.toString(o)).concat(":");
-                                                if (text != null && text.contains(concat1)) {
-                                                    text = text.replace(concat1, concat1.concat(studentAnswer));
-                                                    r.setText(text, 0);
-                                                }
-                                            }
+                                String sa = input.next();
+                                for (XWPFParagraph paragraph3: Document6.getParagraphs()) {
+                                    for (XWPFRun r: paragraph3.getRuns()) {
+                                        String text = r.getText(0);
+                                        String concat1 = "Answer".concat(Integer.toString(o + 1)).concat(":");
+                                        if (text != null && text.contains(concat1)) {
+                                            text = text.replace(concat1, concat1.concat(sa));
+                                            r.setText(text, 0);
+                                            answers[o] = concat1.concat(sa);
                                         }
                                     }
-                                    else
-                                    {
+                                }
+                            }
+                            Document6.write(new FileOutputStream("SampleQuizAnswerKey1.docx"));
+                            System.out.println("Another file has been created as answer key of name \'SampleQuizAnswerKey' with .docx extension.");
+                        }
+                    } catch (IOException | InvalidFormatException e) {
+                        System.out.println("e");
+                    }
+                    for (int l = 0; l < totalStudentsInClass; l++) {
+                        try {
+                            filename = names[l].concat(rollNumbers[l]).concat(".docx");
+                            XWPFDocument Document7 = new XWPFDocument(OPCPackage.open("SampleQuiz2.docx"));
+                            Document7.write(new FileOutputStream(filename));
+                            /*send this file to MongoDataBase to the respective student of this roll number*/
+                        } catch (IOException | InvalidFormatException e) {
+                            System.out.println("e");
+                        }
+                    }
+                    System.out.println("Quizes have been uploaded.");
+                    System.out.println("Enter the time for submission in days,hours,minutes.");
+                    MainStartTimeQuiz = System.currentTimeMillis();
+                    double days = input.nextInt();
+                    days1 = days * 24 * 60 * 60000;
+                    double hours = input.nextInt();
+                    hours1 = hours * 60 * 60000;
+                    double minutes = input.nextInt();
+                    minutes1 = minutes * 60000;
+                    Deadline = days1 + hours1 + minutes1;
+                    if (System.currentTimeMillis() - MainStartTimeQuiz == Deadline) {
+                        try {
+                            for (int m = 0; m < totalStudentsInClass; m++) {
+                                int sMarks = 0;
+                                XWPFDocument docx = new XWPFDocument(new FileInputStream(rollNumbers[m].concat(names[m]).concat("1.docx")));
+                                XWPFWordExtractor wordFile = new XWPFWordExtractor(docx);
+                                String ultimate = wordFile.getText();
+                                for (int n = 0; n < totalQuestions; n++) {
+                                    if (ultimate.contains(answers[n])) {
+                                        sMarks = sMarks + 1;
+                                    }
+                                }
+                                qMarks[m] = sMarks;
+                                System.out.println(sMarks);
+                            }
+                        } catch (IOException e) {
+                            System.out.println("e");
+                        }
+                    }
+                }
+            }
+            if (choiceQ.equalsIgnoreCase("a")) {
+                System.out.print("Enter your roll number please");
+                String rNumber = input.next();
+                System.out.print("Enter your name please");
+                String studentName = input.next();
+                if (System.currentTimeMillis() - MainStartTimeQuiz < Deadline) {
+                    try {
+                        XWPFDocument Document9 = new XWPFDocument(OPCPackage.open(studentName.concat(rNumber).concat(".docx")));
+                        double starttime = System.currentTimeMillis();
+                        if (System.currentTimeMillis() - starttime < 900000) {
+                            for (int o = 1; o <= totalQuestions; o++) {
+                                if (System.currentTimeMillis() - starttime < 900000) {
+                                    System.out.println("Please enter the answer for question " + o);
+                                    if (System.currentTimeMillis() - starttime < 900000) {
+                                        String studentAnswer = input.next();
+                                        if (System.currentTimeMillis() - starttime < 900000) {
+                                            for (XWPFParagraph paragraph3: Document9.getParagraphs()) {
+                                                for (XWPFRun r: paragraph3.getRuns()) {
+                                                    String text = r.getText(0);
+                                                    String concat1 = "Answer".concat(Integer.toString(o)).concat(":");
+                                                    if (text != null && text.contains(concat1)) {
+                                                        text = text.replace(concat1, concat1.concat(studentAnswer));
+                                                        r.setText(text, 0);
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            System.out.println("Time is over");
+                                            break;
+                                        }
+                                    } else {
                                         System.out.println("Time is over");
                                         break;
                                     }
-                                }
-                                else
-                                {
+                                } else {
                                     System.out.println("Time is over");
                                     break;
                                 }
                             }
-                            else
-                            {
-                                System.out.println("Time is over");
-                                break;
-                            }
+                            Document9.write(new FileOutputStream(rNumber.concat(studentName).concat("1.docx")));
                         }
-                        Document9.write(new FileOutputStream(rNumber.concat(studentName).concat("1.docx")));
+                    } catch (IOException | InvalidFormatException e) {
+                        System.out.print("e");
                     }
-                }catch (IOException | InvalidFormatException e)
-                {
-                    System.out.print("e");
-                }
-            }
-            else
-            {
-                System.out.println("Sorry! You are late than the given time");
-            }
-        }
-    }
-    
-    public static void AssignmentModule()
-    {
-        System.out.println("Enter a if you are a student and b if you are a teacher.");
-        Scanner input = new Scanner(System.in);
-        String choiceA = input.next();
-        String filenameA = "any";
-        ArrayList<String> namesA = new ArrayList<>();
-        ArrayList<String> rollNumbersA = new ArrayList<>();
-        ArrayList<Double> aMarks = new ArrayList<>();
-        double days2 = 7 * 24 * 60 * 60000;
-        double hours2 = 0 * 60 * 60000;
-        double minutes2 = 0 * 60000;
-        double MainStartTimeAssignment = 1655050039699.0;
-        double Deadline = days2 + hours2 + minutes2;
-        if (choiceA.equalsIgnoreCase("b")) {
-            System.out.println("Enter the department and the class that you want to issue the assignment");
-            String departmentNameA = input.next();
-            String classNameA = input.next();
-            //Using Mongo data, add students (and their roll numbers) of the respective dept and class to the names and rollNumbers array lists
-            System.out.print("Enter \na: if you want to add an assignment and issue it to the students.\nb: if you want to upload marks for assignments");
-            String choiceTeacherA = input.next();
-            if (choiceTeacherA.equalsIgnoreCase("a")) {
-                try {
-                    XWPFDocument Document = new XWPFDocument();
-                    FileOutputStream Assignment = new FileOutputStream(new File("BASEASSIGNMENT.docx"));
-                    Document.write(Assignment);
-                    Assignment.close();
-                    System.out.println("A file has been created of name \'BASEASSIGNMENT' with .docx extension.");
-                    System.out.println("Please now make an assignment on this docx file.");
-                } catch (Exception e) {
-                    System.out.println("e");
-                }
-                for (int d = 0; d < namesA.size(); d++) {
-                    try {
-                        filenameA = namesA.get(d).concat(rollNumbersA.get(d)).concat(".docx");
-                        XWPFDocument Document1 = new XWPFDocument(OPCPackage.open("BASEASSIGNMENT.docx"));
-                        Document1.write(new FileOutputStream(filenameA));
-                        /*send this file to MongoDataBase to the respective student of this roll number*/
-                    } catch (InvalidFormatException | IOException e) {
-                        System.out.println("e");
-                    }
-                }
-                System.out.println("Assignments have been uploaded.");
-                System.out.println("Edit the code by editing the mainStartTimeAssignment, days, hours and minutes for deadline.");
-            } else if (choiceTeacherA.equalsIgnoreCase("b")) {
-                if (System.currentTimeMillis() - MainStartTimeAssignment >= Deadline) {
-                    for (int d = 0; d < namesA.size(); d++) {
-                        System.out.println("upload the marks of " + namesA.get(d));
-                        double marksNameA = input.nextDouble();
-                        aMarks.add(marksNameA);
-                    }
+                } else {
+                    System.out.println("Sorry! You are late than the given deadline");
                 }
             }
         }
-        else if (choiceA.equalsIgnoreCase("a")) {
-            System.out.print("Enter your roll number please");
-            String rNumberA = input.next();
-            System.out.print("Enter your name please");
-            String studentNameA = input.next();
-            if (System.currentTimeMillis() - MainStartTimeAssignment < Deadline-(10*60000)) {
-                try {
-                    XWPFDocument Document2 = new XWPFDocument(OPCPackage.open(studentNameA.concat(rNumberA).concat(".docx")));
-                    for (XWPFParagraph paragraph2 : Document2.getParagraphs()) {
-                        for (XWPFRun r : paragraph2.getRuns()) {
-                            String text = r.getText(0);
-                            if (text != null && text.contains("Roll Number:")) {
-                                text = text.replace("Roll Number:", "BSE-058");
-                                r.setText(text, 0);
-                            }
-                            if (text != null && text.contains("Name:")) {
-                                text = text.replace("Name:", "Muhammad Oumar");
-                                r.setText(text, 0);
-                            }
-                        }
-                    }
-                    Document2.write(new FileOutputStream(rNumberA.concat(studentNameA).concat("1.docx")));
-                }
-                catch (InvalidFormatException | IOException e) {
-                    System.out.println("e");
-                }
-            }
-            else
-            {
-                System.out.println("Sorry! You are late than the given time");
-            }
+        //Oumar's Workspace Endin
+
+        //Humayun's Workspace Starting
+        //Humaayun's Workspace Ending
+
+        //Main Workspace(Collective)
+
+        public static void main(String[] args) {
+
+            Menu_main_Management();
+
+            System.out.println("Collections Created Successfully");
+            /*
+             * Available collections :
+             *       "StudentsManagement"
+             *       "FeesManagement"
+             *       "AttendanceManagement"
+             *       "GradesManagement"*/
+
+            // var docs = new ArrayList<Document>();//to Store and place documents at once
+            // Document student = new Document("_id","FA21-BSE-077")
+            //        .append("StudentName","Spec")
+            //        .append("MarkSheet",asList(new Document("marks",10)
+            //        .append("grade","A+")));
+            //         docs.add(student);
+
+            // Document Teacher  = new Document("_id", "077")
+            //        .append("Teachername","Spec")
+            //        .append("subejct", "PF")
+            //        .append("semester", "2nd");
+            //         docs.add(Teacher);
+
+            // //Currentcollection.insertOne(CurrentDocument);
+            // Currentcollection.insertMany(docs);
+            // Bson globalFilter = Filters.eq("Teachername","NOT Spec");
+            // Bson statusFilter = Filters.eq("StudentName", "NOT Spec");
+            // FindIterable CurrentDoc =  Currentcollection.find();
+            // Currentcollection.deleteOne(Filters.and(globalFilter,statusFilter));
+
+            // System.out.print("Matcher running...");
+            // String patternTemplate = "\\w\\w-?\\w\\w";
+            // Pattern pattern = Pattern.compile(patternTemplate);
+            // Matcher matcher = pattern.matcher(selectedDegDoc);
+            // if (matcher.find()) {
+            //    System.out.print (matcher.group()); // you can get it from desired index as well
+            // } else {
+            //    System.out.println("Error 404, Desired course string not found");
+            // }
+            // for(String Coll : MainDatabase.listCollectionNames()){
+            //    System.out.println("\t" + Coll);
+
+            // }
+            // MongoCollection < Document > SelectedCollection =
+            // MainDatabase.getCollection("StudentsManagement");
+            //        Bson projection = Projections.fields(Projections.exclude("Course_Name"));
+            //        FindIterable < Document > SelectedDocument =
+            // SelectedCollection.find().projection(projection);
+            //
+            //        for(Document i : SelectedDocument){
+            //            JSONObject json = new JSONObject(i);
+            //            String Extracted_Degree = json.get("_id").toString();
+            //             System.out.println(Extracted_Degree);
+            //
+            //        }
+            //
         }
     }
-    
-//Oumar's Workspace Ending
-
-    //Humayun's Workspace Starting
-    //Humaayun's Workspace Ending
-
-    //Main Workspace(Collective)
-
-
-
-    public static void main(String[] args) {
-
-        Menu_main_Management();
-
-        System.out.println("Collections Created Successfully");
-        /*
-         * Available collections :
-         *       "StudentsManagement"
-         *       "FeesManagement"
-         *       "AttendanceManagement"
-         *       "GradesManagement"*/
-
-        // var docs = new ArrayList<Document>();//to Store and place documents at once
-        // Document student = new Document("_id","FA21-BSE-077")
-        //        .append("StudentName","Spec")
-        //        .append("MarkSheet",asList(new Document("marks",10)
-        //        .append("grade","A+")));
-        //         docs.add(student);
-
-        // Document Teacher  = new Document("_id", "077")
-        //        .append("Teachername","Spec")
-        //        .append("subejct", "PF")
-        //        .append("semester", "2nd");
-        //         docs.add(Teacher);
-
-        // //Currentcollection.insertOne(CurrentDocument);
-        // Currentcollection.insertMany(docs);
-        // Bson globalFilter = Filters.eq("Teachername","NOT Spec");
-        // Bson statusFilter = Filters.eq("StudentName", "NOT Spec");
-        // FindIterable CurrentDoc =  Currentcollection.find();
-        // Currentcollection.deleteOne(Filters.and(globalFilter,statusFilter));
-
-        // System.out.print("Matcher running...");
-        // String patternTemplate = "\\w\\w-?\\w\\w";
-        // Pattern pattern = Pattern.compile(patternTemplate);
-        // Matcher matcher = pattern.matcher(selectedDegDoc);
-        // if (matcher.find()) {
-        //    System.out.print (matcher.group()); // you can get it from desired index as well
-        // } else {
-        //    System.out.println("Error 404, Desired course string not found");
-        // }
-        // for(String Coll : MainDatabase.listCollectionNames()){
-        //    System.out.println("\t" + Coll);
-
-        // }
-        // MongoCollection < Document > SelectedCollection =
-        // MainDatabase.getCollection("StudentsManagement");
-        //        Bson projection = Projections.fields(Projections.exclude("Course_Name"));
-        //        FindIterable < Document > SelectedDocument =
-        // SelectedCollection.find().projection(projection);
-        //
-        //        for(Document i : SelectedDocument){
-        //            JSONObject json = new JSONObject(i);
-        //            String Extracted_Degree = json.get("_id").toString();
-        //             System.out.println(Extracted_Degree);
-        //
-        //        }
-        //
-    }
-}
