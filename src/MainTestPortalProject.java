@@ -143,7 +143,7 @@ public class MainTestPortalProject {
     }
 
     //Pretty for formatting of Document being printed
-    private static String pretty(Document document) {
+    public static String pretty(Document document) {
         var settings = JsonWriterSettings.builder()
                 .indent(true)
                 .outputMode(JsonMode.SHELL)
